@@ -1,0 +1,127 @@
+/* style.css */
+
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+a {
+    color: #4caf50;
+}
+
+/* Login Styles */
+.login-form {
+    margin-top: 100px;
+    text-align: center;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-form button {
+    padding: 8px 16px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.error-message {
+    color: red;
+}
+
+/* Admin Dashboard Styles */
+.admin-dashboard {
+    margin-top: 50px;
+}
+
+.admin-dashboard h2 {
+    margin-bottom: 20px;
+}
+
+.admin-dashboard .card {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.admin-dashboard .card-header {
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.admin-dashboard .card-body {
+    padding: 10px 20px;
+}
+
+.admin-dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-dashboard table th,
+.admin-dashboard table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+/* User Login Styles */
+.user-login {
+    margin-top: 100px;
+    text-align: center;
+}
+
+.user-login label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.user-login input[type="text"],
+.user-login input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.user-login button {
+    padding: 8px 16px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
