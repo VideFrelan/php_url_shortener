@@ -17,16 +17,16 @@ URL Shortener is a simple application that allows users to convert long URLs int
 Before using the URL Shortener application, make sure you have made the necessary configurations:
 
 1. Create a database on your MySQL server.
-2. Open the `configuration/config.php` file and adjust the following database configurations:
+2. Open the `configuration/config.php` file and adjust the following configurations:
 
 ```php
 define('DB_HOST', 'localhost'); // Database hosts
 define('DB_USERNAME', 'your_database_username'); // Database usernames
 define('DB_PASSWORD', 'your_database_password'); // Database passwords
 define('DB_NAME', 'your_database_name'); // Database name
-```
-And also you have to adjust the email configuration below with your web-hosting email settings:
-```php
+
+define('BASE_URL', 'https://YOUR-DOMAIN.COM/'); // Your website domain/subdomain
+
 define('SMTP_HOST', 'YOUR-SMTP-HOST'); // Email hosts
 define('SMTP_PORT', 'ENTER_PORT_HERE'); // Email port
 define('SMTP_USERNAME', 'YOUR-SMTP-USERNAME'); // Email username
