@@ -98,13 +98,42 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
+
+// Handle URL deletion
+if (isset($_GET['delete']) && isset($_GET['id'])) {
+    $deleteId = $_GET['id'];
+    $conn = connectToDatabase();
+    $stmt = $conn->prepare("DELETE FROM url_mappings WHERE id = ? AND user_id = ?");
+    if (!$stmt) {
+        $error = "Preparation of prepared statement failed: " . $conn->error;
+    } else {
+        $stmt->bind_param("ii", $deleteId, $_SESSION['user_id']);
+        if ($stmt->execute()) {
+            header("Location: index.php");
+            exit();
+        } else {
+            $error = "Execution of prepared statement failed: " . $stmt->error;
+        }
+        $stmt->close();
+    }
+    $conn->close();
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>URL Shortener</title>
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <!-- Used to control the appearance of web pages to fit the screen width of the user's device -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Specifies the character encoding of the web page (usually using UTF-8). -->
+    <meta charset="utf-8">
+    <!-- Provides a brief description of the content of a web page for search engine purposes -->
+    <meta name="description" content="URL Shortener is a tool to shorten long URLs and make them more manageable.">
+    <!-- Determines keywords related to web pages for search engine purposes -->
+    <meta name="keywords" content="URL shortener, short URLs, link shortener, web tools">
 </head>
 <body>
     <div class="container">
@@ -117,12 +146,12 @@ $conn->close();
             </div>
             <div class="card-body">
                 <form action="index.php" method="post">
-                    <div class="form-group">
-                        <label for="url">URL:</label>
+                    <div class="mb-3">
+                        <label for="url" class="form-label">URL:</label>
                         <input type="text" class="form-control" name="url" id="url" placeholder="Enter URL" required>
                     </div>
-                    <div class="form-group">
-                        <label for="custom_url">Custom URL (optional):</label>
+                    <div class="mb-3">
+                        <label for="custom_url" class="form-label">Custom URL (optional):</label>
                         <input type="text" class="form-control" name="custom_url" id="custom_url" placeholder="Enter custom URL">
                     </div>
                     <button type="submit" class="btn btn-primary">Shorten</button>
@@ -151,6 +180,7 @@ $conn->close();
                             <th>Short URL</th>
                             <th>Original URL</th>
                             <th>Created At</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -159,6 +189,9 @@ $conn->close();
                                 <td><a href="<?php echo htmlspecialchars($archivedURL['short_url']); ?>"><?php echo htmlspecialchars($archivedURL['short_url']); ?></a></td>
                                 <td><?php echo htmlspecialchars($archivedURL['original_url']); ?></td>
                                 <td><?php echo htmlspecialchars($archivedURL['created_at']); ?></td>
+                                <td>
+                                    <a href="index.php?delete=true&id=<?php echo htmlspecialchars($archivedURL['id']); ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this URL?')">Delete</a>
+                                </td>
                             </tr>
                         <?php } ?>
                     </tbody>
@@ -168,5 +201,8 @@ $conn->close();
             <?php } ?>
         </div>
     </div>
+    <!-- Add Bootstrap JS scripts (jQuery and Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

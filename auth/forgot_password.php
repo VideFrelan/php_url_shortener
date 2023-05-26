@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if the email exists in the database
     if (isEmailValid($email)) {
         $token = generateToken(); // Generate a unique token
-        $expiry = time() + 60; // Set token expiry time to 1 hour
+        $expiry = time() + 3600; // Set token expiry time to 1 hour
 
         // Store the token data in the session
         $_SESSION['reset_token_data'] = [
@@ -69,7 +69,11 @@ function sendResetPasswordEmail($email, $token) {
 <html>
 <head>
     <title>URL Shortener - Forgot Password</title>
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <!-- Used to control the appearance of web pages to fit the screen width of the user's device -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Add Bootstrap CSS link -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
 </head>
 <body>
     <div class="container">
@@ -83,11 +87,14 @@ function sendResetPasswordEmail($email, $token) {
         <form action="forgot_password.php" method="post">
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" name="email" id="email" required>
+                <input type="email" name="email" id="email" required class="form-control">
             </div>
-            <button type="submit">Reset Password</button>
+            <button type="submit" class="btn btn-primary">Reset Password</button>
         </form>
         <p>Remember your password? <a href="login.php">Login here</a>.</p>
     </div>
+    <!-- Add Bootstrap JS scripts (jQuery and Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

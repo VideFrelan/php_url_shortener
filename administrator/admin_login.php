@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: index.php');
             exit();
         } else {
-            $errorMessage = "Anda bukan admin!";
+            $errorMessage = "You're not Admin!";
         }
     } else {
         // Invalid credentials
@@ -62,27 +62,44 @@ function getUserByEmail($email) {
 <html>
 <head>
     <title>Admin Login</title>
+        <!-- Used to control the appearance of web pages to fit the screen width of the user's device -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Add Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <!-- Specifies the character encoding of the web page (usually using UTF-8). -->
+        <meta charset="utf-8">
+        <!-- Provides a brief description of the content of a web page for search engine purposes -->
+        <meta name="description" content="URL Shortener is a tool to shorten long URLs and make them more manageable.">
+        <!-- Determines keywords related to web pages for search engine purposes -->
+        <meta name="keywords" content="URL shortener, short URLs, link shortener, web tools">
 </head>
 <body>
-    <h2>Admin Login</h2>
-    <?php if (isset($error)) { ?>
-        <p><?php echo $error; ?></p>
-    <?php } ?>
-    <?php if (isset($errorMessage)) { ?>
-        <div><?php echo $errorMessage; ?></div>
-    <?php } ?>
-    <form method="POST" action="">
-        <div>
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div>
-            <button type="submit">Login</button>
-        </div>
-    </form>
+    <div class="container">
+        <h2 class="mt-5">Admin Login</h2>
+        <?php if (isset($error)) { ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php } ?>
+        <?php if (isset($errorMessage)) { ?>
+            <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
+        <?php } ?>
+        <form method="POST" action="">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+    </div>
+    <!-- Add Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

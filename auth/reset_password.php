@@ -69,7 +69,11 @@ function updatePassword($email, $password) {
 <html>
 <head>
     <title>URL Shortener - Reset Password</title>
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <!-- Used to control the appearance of web pages to fit the screen width of the user's device -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Add Bootstrap CSS link -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
 </head>
 <body>
     <div class="container">
@@ -84,15 +88,18 @@ function updatePassword($email, $password) {
             <form action="reset_password.php?token=<?php echo urlencode($token); ?>" method="post">
                 <div class="form-group">
                     <label for="password">New Password:</label>
-                    <input type="password" name="password" id="password" required>
+                    <input type="password" name="password" id="password" required class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="confirm_password">Confirm Password:</label>
-                    <input type="password" name="confirm_password" id="confirm_password" required>
+                    <input type="password" name="confirm_password" id="confirm_password" required class="form-control">
                 </div>
-                <button type="submit">Reset Password</button>
+                <button type="submit" class="btn btn-primary">Reset Password</button>
             </form>
         <?php } ?>
     </div>
+    <!-- Add Bootstrap JS scripts (jQuery and Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

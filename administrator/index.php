@@ -118,53 +118,66 @@ function deleteUser($id) {
 <html>
 <head>
     <title>Admin Dashboard</title>
+    <!-- Used to control the appearance of web pages to fit the screen width of the user's device -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h2>Admin Dashboard</h2>
-    <?php if (isset($error)) { ?>
-        <p style="color: red;"><?php echo $error; ?></p>
-    <?php } ?>
-    <p>Welcome, admin! Here are the shortened URLs:</p>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Original URL</th>
-            <th>Short URL</th>
-            <th>Actions</th>
-        </tr>
-        <?php foreach ($urls as $url) { ?>
-            <tr>
-                <td><?php echo $url['id']; ?></td>
-                <td><?php echo $url['original_url']; ?></td>
-                <td><?php echo $url['short_url']; ?></td>
-                <td>
-                    <a href="admin_delete.php?type=url&id=<?php echo $url['id']; ?>">Delete</a>
-                </td>
-            </tr>
+    <div class="container">
+        <h2 class="mt-5">Admin Dashboard</h2>
+        <?php if (isset($error)) { ?>
+            <p class="text-danger"><?php echo $error; ?></p>
         <?php } ?>
-    </table>
-    <p>Users:</p>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-        <?php foreach ($users as $user) { ?>
-            <tr>
-                <td><?php echo $user['id']; ?></td>
-                <td><?php echo $user['username']; ?></td>
-                <td><?php echo $user['email']; ?></td>
-                <td>
-                    <a href="admin_delete.php?type=user&id=<?php echo $user['id']; ?>">Delete</a>
-                </td>
-            </tr>
-        <?php } ?>
-    </table>
-    <p>
-        <a href="index.php?logout=true">Logout</a> |
-        <a href="../index.php">User Panel</a>
-    </p>
+        <p>Welcome, admin! Here are the shortened URLs:</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Original URL</th>
+                    <th>Short URL</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($urls as $url) { ?>
+                    <tr>
+                        <td><?php echo $url['id']; ?></td>
+                        <td><?php echo $url['original_url']; ?></td>
+                        <td><?php echo $url['short_url']; ?></td>
+                        <td>
+                            <a href="admin_delete.php?type=url&id=<?php echo $url['id']; ?>" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+        <p>Users:</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user) { ?>
+                    <tr>
+                        <td><?php echo $user['id']; ?></td>
+                        <td><?php echo $user['username']; ?></td>
+                        <td><?php echo $user['email']; ?></td>
+                        <td>
+                            <a href="admin_delete.php?type=user&id=<?php echo $user['id']; ?>" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+    <!-- Add Bootstrap JS scripts (jQuery and Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

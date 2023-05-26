@@ -50,7 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>URL Shortener - Verify OTP</title>
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <!-- Used to control the appearance of web pages to fit the screen width of the user's device -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Add Bootstrap CSS link -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
 </head>
 <body>
     <div class="container">
@@ -61,9 +65,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Invalid OTP. Please try again.</p>
         <?php } ?>
         <form action="verify_otp.php" method="post">
-            <input type="text" name="otp" placeholder="OTP" required>
-            <button type="submit">Verify</button>
+            <div class="form-group">
+                <input type="text" name="otp" placeholder="OTP" required class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Verify</button>
         </form>
     </div>
+    <!-- Add Bootstrap JS scripts (jQuery and Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
