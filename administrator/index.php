@@ -126,6 +126,7 @@ function deleteUser($id) {
 <body>
     <div class="container">
         <h2 class="mt-5">Admin Dashboard</h2>
+        <p><a href="../index.php">Go back</a> to the URL shortener page | <a href="../auth/logout.php">logout</a></p>
         <?php if (isset($error)) { ?>
             <p class="text-danger"><?php echo $error; ?></p>
         <?php } ?>
@@ -136,6 +137,8 @@ function deleteUser($id) {
                     <th>ID</th>
                     <th>Original URL</th>
                     <th>Short URL</th>
+                    <th>Views</th>
+                    <th>Created At</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -145,6 +148,8 @@ function deleteUser($id) {
                         <td><?php echo $url['id']; ?></td>
                         <td><?php echo $url['original_url']; ?></td>
                         <td><?php echo $url['short_url']; ?></td>
+                        <td><?php echo $url['views']; ?></td>
+                        <td><?php echo $url['created_at']; ?></td>
                         <td>
                             <a href="admin_delete.php?type=url&id=<?php echo $url['id']; ?>" class="btn btn-danger">Delete</a>
                         </td>
