@@ -20,7 +20,8 @@ $urls = getAllUrls();
 $users = getAllUsers();
 
 // Function to get all shortened URLs from the database
-function getAllUrls() {
+function getAllUrls()
+{
     $conn = connectToDatabase();
 
     $sql = "SELECT * FROM url_mappings";
@@ -39,7 +40,8 @@ function getAllUrls() {
 }
 
 // Function to get all users from the database
-function getAllUsers() {
+function getAllUsers()
+{
     $conn = connectToDatabase();
 
     $sql = "SELECT * FROM users";
@@ -84,7 +86,8 @@ if (isset($_GET['type']) && isset($_GET['id'])) {
 }
 
 // Function to delete a shortened URL
-function deleteUrl($id) {
+function deleteUrl($id)
+{
     $conn = connectToDatabase();
 
     $sql = "DELETE FROM url_mappings WHERE id = ?";
@@ -99,7 +102,8 @@ function deleteUrl($id) {
 }
 
 // Function to delete a user account
-function deleteUser($id) {
+function deleteUser($id)
+{
     $conn = connectToDatabase();
 
     $sql = "DELETE FROM users WHERE id = ?";
@@ -126,60 +130,68 @@ function deleteUser($id) {
 <body>
     <div class="container">
         <h2 class="mt-5">Admin Dashboard</h2>
-        <p><a href="../index.php">Go back</a> to the URL shortener page | <a href="../auth/logout.php">logout</a></p>
         <?php if (isset($error)) { ?>
             <p class="text-danger"><?php echo $error; ?></p>
         <?php } ?>
-        <p>Welcome, admin! Here are the shortened URLs:</p>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Original URL</th>
-                    <th>Short URL</th>
-                    <th>Views</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($urls as $url) { ?>
-                    <tr>
-                        <td><?php echo $url['id']; ?></td>
-                        <td><?php echo $url['original_url']; ?></td>
-                        <td><?php echo $url['short_url']; ?></td>
-                        <td><?php echo $url['views']; ?></td>
-                        <td><?php echo $url['created_at']; ?></td>
-                        <td>
-                            <a href="admin_delete.php?type=url&id=<?php echo $url['id']; ?>" class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-        <p>Users:</p>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($users as $user) { ?>
-                    <tr>
-                        <td><?php echo $user['id']; ?></td>
-                        <td><?php echo $user['username']; ?></td>
-                        <td><?php echo $user['email']; ?></td>
-                        <td>
-                            <a href="admin_delete.php?type=user&id=<?php echo $user['id']; ?>" class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Welcome, admin! Here are the shortened URLs:</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Original URL</th>
+                            <th>Short URL</th>
+                            <th>Views</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($urls as $url) { ?>
+                            <tr>
+                                <td><?php echo $url['id']; ?></td>
+                                <td><?php echo $url['original_url']; ?></td>
+                                <td><?php echo $url['short_url']; ?></td>
+                                <td><?php echo $url['views']; ?></td>
+                                <td><?php echo $url['created_at']; ?></td>
+                                <td>
+                                    <a href="admin_delete.php?type=url&id=<?php echo $url['id']; ?>" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+                <hr>
+                <p>Users:</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($users as $user) { ?>
+                            <tr>
+                                <td><?php echo $user['id']; ?></td>
+                                <td><?php echo $user['username']; ?></td>
+                                <td><?php echo $user['email']; ?></td>
+                                <td>
+                                    <a href="admin_delete.php?type=user&id=<?php echo $user['id']; ?>" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+                <hr>
+            </div>
+        </div>
+        <footer>
+            <p><a href="../index.php">Go back</a> to the URL shortener page | <a href="../auth/logout.php">logout</a></p>
+        </footer>
     </div>
     <!-- Add Bootstrap JS scripts (jQuery and Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
