@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(E_ALL);
 require_once('configuration/config.php');
 
 // Function to shorten URLs randomly
@@ -22,41 +23,65 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Handle the URL shortening process
+$error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $originalURL = filter_input(INPUT_POST, 'url', FILTER_SANITIZE_URL);
     $customURL = filter_input(INPUT_POST, 'custom_url', FILTER_SANITIZE_STRING);
     $userId = $_SESSION['user_id'];
 
-    // Filtering insterted URL
+    // Filtering inserted URL
     if (!filter_var($originalURL, FILTER_VALIDATE_URL)) {
-        die("Invalid URL.");
-    }
-
-    // Create a short URL
-    $shortURL = (empty($customURL)) ? generateShortURL() : $customURL;
-
-    $conn = connectToDatabase();
-    $stmt = $conn->prepare("INSERT INTO url_mappings (short_url, original_url, user_id) VALUES (?, ?, ?)");
-
-    if (!$stmt) {
-        die("Preparation of prepared statement failed: " . $conn->error);
-    }
-
-    $stmt->bind_param("sss", $shortURL, $originalURL, $userId);
-
-    if ($stmt->execute()) {
-        $shortenedURL = BASE_URL . $shortURL;
+        $error = "Invalid URL.";
     } else {
-        die("Execution of prepared statement failed: " . $stmt->error);
-    }
+        // Check if the custom URL or randomly generated short URL already exists in the database
+        $conn = connectToDatabase();
 
-    $stmt->close();
-    $conn->close();
+        if (!empty($customURL)) {
+            $stmt = $conn->prepare("SELECT short_url FROM url_mappings WHERE short_url = ? LIMIT 1");
+            if ($conn->error) {
+                $error = "Database error: " . $conn->error;
+            } else {
+                $stmt->bind_param("s", $customURL);
+                $stmt->execute();
+                $stmt->store_result();
+
+                if ($stmt->num_rows > 0) {
+                    $error = "Custom URL already exists. Please use a different one.";
+                }
+
+                $stmt->close();
+            }
+        }
+
+        if (empty($error)) {
+            // Create a short URL
+            $shortURL = (empty($customURL)) ? generateShortURL() : $customURL;
+
+            $stmt = $conn->prepare("INSERT INTO url_mappings (short_url, original_url, user_id, created_at) VALUES (?, ?, ?, NOW())");
+
+            if (!$stmt) {
+                $error = "Preparation of prepared statement failed: " . $conn->error;
+            } else {
+                $stmt->bind_param("sss", $shortURL, $originalURL, $userId);
+
+                if ($stmt->execute()) {
+                    $shortenedURL = BASE_URL . $shortURL;
+                } else {
+                    $error = "Execution of prepared statement failed: " . $stmt->error;
+                }
+
+                $stmt->close();
+            }
+        }
+
+        $conn->close();
+    }
 }
 
 // Retrieve the shortened URL for the current user
 $conn = connectToDatabase();
-$stmt = $conn->prepare("SELECT id, short_url, original_url FROM url_mappings WHERE user_id = ?");
+
+$stmt = $conn->prepare("SELECT id, short_url, original_url, created_at FROM url_mappings WHERE user_id = ?");
 
 if (!$stmt) {
     die("Preparation of prepared statement failed: " . $conn->error);
@@ -74,24 +99,12 @@ if ($stmt->execute()) {
 $stmt->close();
 $conn->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>URL Shortener</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <style>
-        .container {
-            margin-top: 50px;
-        }
-
-        .shorten-form {
-            margin-bottom: 30px;
-        }
-
-        .archived-urls {
-            margin-top: 50px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
 </head>
 <body>
     <div class="container">
@@ -114,6 +127,11 @@ $conn->close();
                     </div>
                     <button type="submit" class="btn btn-primary">Shorten</button>
                 </form>
+                <?php if (!empty($error)) { ?>
+                    <div class="alert alert-danger mt-4">
+                        <?php echo htmlspecialchars($error); ?>
+                    </div>
+                <?php } ?>
             </div>
         </div>
 
@@ -132,6 +150,7 @@ $conn->close();
                         <tr>
                             <th>Short URL</th>
                             <th>Original URL</th>
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -139,6 +158,7 @@ $conn->close();
                             <tr>
                                 <td><a href="<?php echo htmlspecialchars($archivedURL['short_url']); ?>"><?php echo htmlspecialchars($archivedURL['short_url']); ?></a></td>
                                 <td><?php echo htmlspecialchars($archivedURL['original_url']); ?></td>
+                                <td><?php echo htmlspecialchars($archivedURL['created_at']); ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>

@@ -2,13 +2,17 @@
 
 URL Shortener is a simple application that allows users to convert long URLs into shorter and shareable URLs. This app is useful in situations where a user wants to share a shorter and memorable link with others.
 
+## Demo
+
+You can see a demo of my URL shortener website that I have provided for you here: [https://frelan.tenazpedia.com][def]
+
 ## Feature
 
 - Admin Dashboard: An dashboard that enables administrators to delete URLs and users.
 - Reset Password: Password recovery feature that allows users to reset their password if it is forgotten.
 - URL Shortener: Converts long URLs to shorter URLs.
 - URL Customization: Users can customize the short URL they have created.
-- URL statistics(soon): Provides usage statistics for each shortened URL, such as number of clicks and creation date.
+- URL Statistics: Provides usage statistics for each shortened URL, such as creation date.
 - User Authentication: An authentication system that allows users to login and access available features.
 - Registration with OTP Verification: Users are required to verify their email address during the registration process by entering a One-Time Password (OTP) sent to their registered email.
 
@@ -34,6 +38,8 @@ define('SMTP_PASSWORD', 'YOUR-SMTP-PASSWORD'); // Email password
 define('EMAIL_FROM', 'YOUR-EMAIL'); // Your website email
 ```
 
+3. Make sure your web-hosting settings have ```'mod_rewrite'```, ```'allow_url_fopen'``` and ```'allow_url_include'``` enabled.
+
 ## How to use
 
 1. Open the URL Shortener application in a browser.
@@ -41,11 +47,9 @@ define('EMAIL_FROM', 'YOUR-EMAIL'); // Your website email
 3. After registering or if you already have an account, enter using the email and password that you registered.
 4. After successful login, you will be directed to the application dashboard.
 5. To shorten a URL, enter the URL you want to shorten into the input box provided on the dashboard page.
-6. Click the "Shrink" button to start URL shortening.
+6. Click the "Shorten" button to start URL shortening.
 7. Copy the short URL and use it to share it with others.
 8. You can also view usage statistics of the URLs you have shortened on the dashboard page.
-9. To manage the URLs you have shortened, click the "Manage URLs" button on the dashboard page.
-10. On the "Manage URLs" page, you can view a list of URLs that you have shortened, edit or delete URLs, and view usage statistics for each URL.
 
 ## Contribution
 
@@ -54,3 +58,5 @@ If you want to contribute to the development of URL Shortener, you can fork this
 ## Licence
 
 URL Shortener is licensed under [MIT License](LICENSE).
+
+[def]: https://frelan.tenazpedia.com
