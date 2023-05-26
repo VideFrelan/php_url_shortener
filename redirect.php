@@ -17,6 +17,13 @@ if (isset($_GET['redirecturl'])) {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $originalURL = $row['original_url'];
+            
+            // Update jumlah views
+            $updateViewsStmt = $conn->prepare("UPDATE url_mappings SET views = views + 1 WHERE short_url = ?");
+            $updateViewsStmt->bind_param("s", $shortURL);
+            $updateViewsStmt->execute();
+            $updateViewsStmt->close();
+            
             header("Location: $originalURL");
             exit();
         } else {
@@ -31,4 +38,3 @@ if (isset($_GET['redirecturl'])) {
 } else {
     die("Invalid URL.");
 }
-?>

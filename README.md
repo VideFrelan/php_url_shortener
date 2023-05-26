@@ -12,7 +12,7 @@ You can see a demo of my URL shortener website that I have provided for you here
 - Reset Password: Password recovery feature that allows users to reset their password if it is forgotten.
 - URL Shortener: Converts long URLs to shorter URLs.
 - URL Customization: Users can customize the short URL they have created.
-- URL Statistics: Provides usage statistics for each shortened URL, such as creation date.
+- URL Statistics: Provides usage statistics for each shortened URL, such as such as number of clicks and creation date.
 - User Authentication: An authentication system that allows users to login and access available features.
 - Registration with OTP Verification: Users are required to verify their email address during the registration process by entering a One-Time Password (OTP) sent to their registered email.
 
