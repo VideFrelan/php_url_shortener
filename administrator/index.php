@@ -50,7 +50,7 @@ function getAllUsers()
     $users = [];
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $users[] = $row;
+            $users[$row['id']] = $row;
         }
     }
 
@@ -85,39 +85,14 @@ if (isset($_GET['type']) && isset($_GET['id'])) {
     }
 }
 
-// Function to delete a shortened URL
-function deleteUrl($id)
+// Function to sanitize input
+function sanitizeInput($input)
 {
-    $conn = connectToDatabase();
-
-    $sql = "DELETE FROM url_mappings WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $result = $stmt->execute();
-
-    $stmt->close();
-    $conn->close();
-
-    return $result;
+    $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+    return $input;
 }
 
-// Function to delete a user account
-function deleteUser($id)
-{
-    $conn = connectToDatabase();
-
-    $sql = "DELETE FROM users WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $result = $stmt->execute();
-
-    $stmt->close();
-    $conn->close();
-
-    return $result;
-}
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -135,13 +110,22 @@ function deleteUser($id)
         <?php } ?>
         <div class="row">
             <div class="col-md-12">
-                <p>Welcome, admin! Here are the shortened URLs:</p>
+                <p>Welcome, admin! Here are the shortened URLs and users:</p>
+                <form method="GET" action="search.php">
+                    <div class="form-group">
+                        <input type="text" name="keyword" placeholder="Search URLs or Users here..." class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" name="" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
                 <table class="table">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Original URL</th>
                             <th>Short URL</th>
+                            <th>User</th>
                             <th>Views</th>
                             <th>Created At</th>
                             <th>Actions</th>
@@ -151,25 +135,27 @@ function deleteUser($id)
                         <?php foreach ($urls as $url) { ?>
                             <tr>
                                 <td><?php echo $url['id']; ?></td>
-                                <td><?php echo $url['original_url']; ?></td>
-                                <td><?php echo $url['short_url']; ?></td>
+                                <td><?php echo sanitizeInput($url['original_url']); ?></td>
+                                <td><?php echo sanitizeInput($url['short_url']); ?></td>
+                                <td><?php echo sanitizeInput($users[$url['user_id']]['username']); ?></td>
                                 <td><?php echo $url['views']; ?></td>
-                                <td><?php echo $url['created_at']; ?></td>
+                                <td><?php echo sanitizeInput($url['created_at']); ?></td>
                                 <td>
-                                    <a href="admin_delete.php?type=url&id=<?php echo $url['id']; ?>" class="btn btn-danger">Delete</a>
+                                    <a href="admin_delete.php?type=url&id=<?php echo $url['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this URL?')">Delete</a>
                                 </td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
                 <hr>
-                <p>Users:</p>
                 <table class="table">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Username</th>
                             <th>Email</th>
+                            <th>Role</th>
+                            <th>Created At</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -177,24 +163,21 @@ function deleteUser($id)
                         <?php foreach ($users as $user) { ?>
                             <tr>
                                 <td><?php echo $user['id']; ?></td>
-                                <td><?php echo $user['username']; ?></td>
-                                <td><?php echo $user['email']; ?></td>
+                                <td><?php echo sanitizeInput($user['username']); ?></td>
+                                <td><?php echo sanitizeInput($user['email']); ?></td>
+                                <td><?php echo sanitizeInput($user['role']); ?></td>
+                                <td><?php echo sanitizeInput($user['created_at']); ?></td>
                                 <td>
-                                    <a href="admin_delete.php?type=user&id=<?php echo $user['id']; ?>" class="btn btn-danger">Delete</a>
+                                    <a href="admin_delete.php?type=user&id=<?php echo $user['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                                 </td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
-                <hr>
+                <a href="index.php?logout=true" class="btn btn-primary">Logout</a>
             </div>
         </div>
-        <footer>
-            <p><a href="../index.php">Go back</a> to the URL shortener page | <a href="../auth/logout.php">logout</a></p>
-        </footer>
     </div>
-    <!-- Add Bootstrap JS scripts (jQuery and Bootstrap) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

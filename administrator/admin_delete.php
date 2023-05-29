@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once('../configuration/config.php');
-require_once('../administrator/index.php');
 
 // Check if the user is logged in as admin
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
@@ -33,17 +32,75 @@ if (isset($_GET['type']) && isset($_GET['id'])) {
         }
     } elseif ($type === 'user') {
         // Delete a user account
-        $deleted = deleteUser($id);
-        if ($deleted) {
-            header('Location: index.php');
-            exit();
+        if ($id === $_SESSION['user']['id']) {
+            $error = "You cannot delete your own account.";
         } else {
-            $error = "Failed to delete the user.";
+            $userToDelete = getUser($id);
+            if ($userToDelete['role'] === 'admin') {
+                $error = "You cannot delete an admin account.";
+            } else {
+                $deleted = deleteUser($id);
+                if ($deleted) {
+                    header('Location: index.php');
+                    exit();
+                } else {
+                    $error = "Failed to delete the user.";
+                }
+            }
         }
     }
 }
 
-// If the type or ID parameters are not valid, redirect back to the admin dashboard
+// Function to get user details
+function getUser($id)
+{
+    $conn = connectToDatabase();
+
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+
+    $stmt->close();
+    $conn->close();
+
+    return $result;
+}
+
+// Function to delete a shortened URL
+function deleteUrl($id)
+{
+    $conn = connectToDatabase();
+
+    $sql = "DELETE FROM url_mappings WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $result = $stmt->execute();
+
+    $stmt->close();
+    $conn->close();
+
+    return $result;
+}
+
+// Function to delete a user account
+function deleteUser($id)
+{
+    $conn = connectToDatabase();
+
+    $sql = "DELETE FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $result = $stmt->execute();
+
+    $stmt->close();
+    $conn->close();
+
+    return $result;
+}
+
+// Redirect back to the admin dashboard if the type or ID parameters are not valid
 header('Location: index.php');
 exit();
 ?>
