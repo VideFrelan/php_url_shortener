@@ -16,5 +16,6 @@ CREATE TABLE url_mappings (
     views int(11) NOT NULL DEFAULT 0,
     user_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    qr_code_image VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
