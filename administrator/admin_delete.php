@@ -31,22 +31,14 @@ if (isset($_GET['type']) && isset($_GET['id'])) {
             $error = "Failed to delete the URL.";
         }
     } elseif ($type === 'user') {
-        // Delete a user account
-        if ($id === $_SESSION['user']['id']) {
-            $error = "You cannot delete your own account.";
+        // Delete a user account and associated URLs
+        $deleted = deleteUserAndUrls($id);
+    
+        if ($deleted) {
+            header('Location: index.php');
+            exit();
         } else {
-            $userToDelete = getUser($id);
-            if ($userToDelete['role'] === 'admin') {
-                $error = "You cannot delete an admin account.";
-            } else {
-                $deleted = deleteUser($id);
-                if ($deleted) {
-                    header('Location: index.php');
-                    exit();
-                } else {
-                    $error = "Failed to delete the user.";
-                }
-            }
+            $error = "Failed to delete the user.";
         }
     }
 }
@@ -84,21 +76,44 @@ function deleteUrl($id)
     return $result;
 }
 
-// Function to delete a user account
-function deleteUser($id)
+// Function to delete user and associated URLs
+function deleteUserAndUrls($userId)
 {
     $conn = connectToDatabase();
 
-    $sql = "DELETE FROM users WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $result = $stmt->execute();
+    // Check if the user has any associated URLs
+    $sqlCheckUrls = "SELECT COUNT(*) as total FROM url_mappings WHERE user_id = ?";
+    $stmtCheckUrls = $conn->prepare($sqlCheckUrls);
+    $stmtCheckUrls->bind_param("i", $userId);
+    $stmtCheckUrls->execute();
+    $result = $stmtCheckUrls->get_result();
+    $row = $result->fetch_assoc();
+    $totalUrls = $row['total'];
 
-    $stmt->close();
+    // Delete URLs associated with the user, if any
+    if ($totalUrls > 0) {
+        $sqlUrls = "DELETE FROM url_mappings WHERE user_id = ?";
+        $stmtUrls = $conn->prepare($sqlUrls);
+        $stmtUrls->bind_param("i", $userId);
+        $deletedUrls = $stmtUrls->execute();
+        $stmtUrls->close();
+    } else {
+        $deletedUrls = true;
+    }
+
+    // Delete the user
+    $sqlUser = "DELETE FROM users WHERE id = ?";
+    $stmtUser = $conn->prepare($sqlUser);
+    $stmtUser->bind_param("i", $userId);
+    $deletedUser = $stmtUser->execute();
+
+    $stmtCheckUrls->close();
+    $stmtUser->close();
     $conn->close();
 
-    return $result;
+    return $deletedUrls && $deletedUser;
 }
+
 
 // Redirect back to the admin dashboard if the type or ID parameters are not valid
 header('Location: index.php');

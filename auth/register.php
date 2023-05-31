@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../configuration/config.php');
+require_once('../configuration/mail.php');
 
 // Redirect to index.php if user is already logged in
 if (isset($_SESSION['user_id'])) {
@@ -30,13 +31,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $otp = generateOTP(); // Generate OTP
         sendOTP($email, $otp);
 
+        // Hash the password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
         // Store registration data in session for verification
         $_SESSION['registration_data'] = [
             'username' => $username,
             'email' => $email,
-            'password' => $password,
+            'password' => $hashedPassword,
             'otp' => $otp
         ];
+        
+        // Store email in session
+        $_SESSION['email'] = $email;
 
         // Redirect to verify_otp.php
         header('Location: verify_otp.php');

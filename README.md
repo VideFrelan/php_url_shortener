@@ -21,7 +21,7 @@ You can see a demo of my URL shortener website that I have provided for you here
 
 Before using the URL Shortener application, make sure you have made the necessary configurations:
 
-1. Create a database on your MySQL server.
+1. Create your MySQL database by importing the database.sql file provided in this repository.
 2. Open the `configuration/config.php` file and adjust the following configurations:
 
 ```php
@@ -31,7 +31,10 @@ define('DB_PASSWORD', 'your_database_password'); // Database passwords
 define('DB_NAME', 'your_database_name'); // Database name
 
 define('BASE_URL', 'https://YOUR-DOMAIN.COM/'); // Your website domain/subdomain
+```
 
+3. Open the `configuration/mail.php` file and adjust the following configurations:
+```php
 define('SMTP_HOST', 'YOUR-SMTP-HOST'); // Email hosts
 define('SMTP_PORT', 'ENTER_PORT_HERE'); // Email port
 define('SMTP_USERNAME', 'YOUR-SMTP-USERNAME'); // Email username
@@ -39,7 +42,7 @@ define('SMTP_PASSWORD', 'YOUR-SMTP-PASSWORD'); // Email password
 define('EMAIL_FROM', 'YOUR-EMAIL'); // Your website email
 ```
 
-3. Make sure your web-hosting settings have ```'mod_rewrite'```, ```'allow_url_fopen'``` and ```'allow_url_include'``` enabled.
+4. Make sure your web-hosting settings have ```'mod_rewrite'```, ```'allow_url_fopen'``` and ```'allow_url_include'``` enabled.
 
 ## How to use
 

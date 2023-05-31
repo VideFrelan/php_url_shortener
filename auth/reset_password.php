@@ -22,15 +22,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirm_password'];
 
+    // Hash the password
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
     // Validate the password
     if (validatePassword($password, $confirmPassword)) {
         // Update the password in the database
-        if (updatePassword($email, $password)) {
+        if (updatePassword($email, $hashedPassword)) {
             // Clear the session data
             unset($_SESSION['reset_token_data']);
 
             // Set the success message
-            $successMessage = "Your password has been successfully updated.";
+            $successMessage = "Your password has been successfully updated. You will be redirected to the login page shortly.";
         } else {
             $error = "Failed to update password.";
         }
@@ -51,11 +54,11 @@ function validatePassword($password, $confirmPassword) {
 }
 
 // Function to update the password in the database
-function updatePassword($email, $password) {
+function updatePassword($email, $hashedPassword) {
     $conn = connectToDatabase();
 
     $stmt = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
-    $stmt->bind_param("ss", $password, $email);
+    $stmt->bind_param("ss", $hashedPassword, $email);
     $result = $stmt->execute();
 
     $stmt->close();
@@ -74,8 +77,30 @@ function updatePassword($email, $password) {
         <!-- Add Bootstrap CSS link -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <script>
+        // Function to start the countdown
+        function startCountdown(seconds) {
+            var countdownElement = document.getElementById("countdown");
+            countdownElement.textContent = seconds;
+
+            var countdownInterval = setInterval(function() {
+                seconds--;
+                countdownElement.textContent = seconds;
+
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    redirectToLogin();
+                }
+            }, 1000);
+        }
+
+        // Function to redirect to login page
+        function redirectToLogin() {
+            window.location.href = "logout.php";
+        }
+    </script>
 </head>
-<body>
+<body onload="startCountdown(3)">
     <div class="container">
         <h1>URL Shortener</h1>
         <h2>Reset Password</h2>
@@ -83,6 +108,7 @@ function updatePassword($email, $password) {
             <div class="error"><?php echo $error; ?></div>
         <?php } elseif (isset($successMessage)) { ?>
             <div class="success"><?php echo $successMessage; ?></div>
+            <p>Please wait <span id="countdown"></span> seconds...</p>
         <?php } ?>
         <?php if (!isset($successMessage)) { ?>
             <form action="reset_password.php?token=<?php echo urlencode($token); ?>" method="post">

@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($userInputOTP === $otp) {
         $username = $registrationData['username'];
         $email = $registrationData['email'];
-        $password = $registrationData['password'];
+        $hashedPassword = $registrationData['password'];
 
         $conn = connectToDatabase();
         $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $username, $email, $password);
+        $stmt->bind_param("sss", $username, $email, $hashedPassword);
         $stmt->execute();
         $stmt->close();
         $conn->close();
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <h1>URL Shortener</h1>
         <h2>Verify OTP</h2>
-        <p>Enter the OTP sent to your email to complete the registration process.</p>
+        <p>Enter the OTP sent to your email (<?php echo $_SESSION['email']; ?>) to complete the registration process.</p>
         <?php if (isset($otpError)) { ?>
             <p>Invalid OTP. Please try again.</p>
         <?php } ?>

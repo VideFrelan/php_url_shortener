@@ -74,8 +74,9 @@ if (isset($_GET['type']) && isset($_GET['id'])) {
             $error = "Failed to delete the URL.";
         }
     } elseif ($type === 'user') {
-        // Delete a user account
-        $deleted = deleteUser($id);
+        // Delete a user account and associated URLs
+        $deleted = deleteUserAndUrls($id);
+    
         if ($deleted) {
             header('Location: index.php');
             exit();
@@ -83,7 +84,7 @@ if (isset($_GET['type']) && isset($_GET['id'])) {
             $error = "Failed to delete the user.";
         }
     }
-}
+}    
 
 // Function to sanitize input
 function sanitizeInput($input)

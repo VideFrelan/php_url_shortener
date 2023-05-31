@@ -1,6 +1,10 @@
 <?php
 session_start();
+// Import PHPMailer library
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 require_once('../configuration/config.php');
+require_once('../configuration/mail.php');
 
 // Process forgot password form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -54,16 +58,35 @@ function generateToken() {
 
 // Function to send the reset password email
 function sendResetPasswordEmail($email, $token) {
-    $to = $email;
-    $subject = "Reset Your Password";
-    $message = "To reset your password, please click the following link:\n\n";
-    $message .= "https://frelan.tenazpedia.com/auth/reset_password.php?token=" . urlencode($token);
+    $mail = new PHPMailer(true);
 
-    // Add your email sending logic here, using PHPMailer or mail() function
-    // Example using mail() function:
-    mail($to, $subject, $message);
+    try {
+        // Configure SMTP settings
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;
+        $mail->Port = SMTP_PORT;
+        $mail->SMTPAuth = true;
+        $mail->Username = SMTP_USERNAME;
+        $mail->Password = SMTP_PASSWORD;
+        $mail->SMTPSecure = 'ssl';
+
+        // Set email content
+        $mail->setFrom(EMAIL_FROM, 'URL Shortener');
+        $mail->addAddress($email);
+        $mail->Subject = 'Reset Your Password';
+        $mail->Body = "To reset your password, please click the following link:\n\n";
+        $mail->Body .= "https://frelan.tenazpedia.com/auth/reset_password.php?token=" . urlencode($token);
+
+        // Send email
+        $mail->send();
+    } catch (Exception $e) {
+        // Handle exception if an error occurs
+        $error = 'Email could not be sent. Error: ' . $mail->ErrorInfo;
+        echo $error;
+    }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>

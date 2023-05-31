@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if user exists and password is correct
     $user = getUserByEmail($email);
 
-    if ($user && $password === $user['password']) {
+    if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         header('Location: ../index.php');

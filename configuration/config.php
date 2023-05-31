@@ -1,18 +1,13 @@
 <?php
+error_reporting(E_ALL);
+
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_USERNAME', 'YOUR_DB_USERNAME');
-define('DB_PASSWORD', 'YOUR_DB_PASSWORD');
-define('DB_NAME', 'YOUR_DB_NAME');
+define('DB_USERNAME', 'tenazped_admin');
+define('DB_PASSWORD', 'frelanGTA123');
+define('DB_NAME', 'tenazped_url_shortener');
 
-define('BASE_URL', 'https://YOUR-DOMAIN.COM/');
-
-// Email configuration
-define('SMTP_HOST', 'YOUR-SMTP-HOST');
-define('SMTP_PORT', 'ENTER_PORT_HERE');
-define('SMTP_USERNAME', 'YOUR-SMTP-USERNAME');
-define('SMTP_PASSWORD', 'YOUR-SMTP-PASSWORD');
-define('EMAIL_FROM', 'YOUR-EMAIL');
+define('BASE_URL', 'https://frelan.tenazpedia.com/');
 
 // Database connection function
 function connectToDatabase()
@@ -37,17 +32,5 @@ function generateOTP()
     }
 
     return $otp;
-}
-
-// Send OTP to the provided email address
-function sendOTP($email, $otp)
-{
-    $to = $email;
-    $subject = 'OTP for Registration';
-    $message = 'Your OTP for registration is: ' . $otp;
-    $headers = "From: " . EMAIL_FROM . "\r\n";
-    $headers .= "Reply-To: " . EMAIL_FROM . "\r\n";
-
-    mail($to, $subject, $message, $headers);
 }
 ?>

@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check the credentials in the database
     $user = getUserByEmail($email);
 
-    if ($user && $password === $user['password']) {
+    if ($user && password_verify($password, $user['password'])) {
         // Authentication successful
         $_SESSION['user'] = $user;
 
